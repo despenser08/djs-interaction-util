@@ -2,40 +2,40 @@ import { MessageButton, MessageOptions } from "discord.js";
 
 export type Page = MessageOptions;
 
-export enum PaginatorButtonTypes {
+export enum ButtonPaginatorTypes {
   PREV = "PREV",
   CANCEL = "CANCEL",
   NEXT = "NEXT"
 }
-export type PaginatorButtonTypesResolvable =
-  | keyof typeof PaginatorButtonTypes
-  | PaginatorButtonTypes;
+export type ButtonPaginatorTypesResolvable =
+  | keyof typeof ButtonPaginatorTypes
+  | ButtonPaginatorTypes;
 
-export type PaginatorButton = Record<PaginatorButtonTypes, MessageButton>;
+export type ButtonPaginatorButton = Record<ButtonPaginatorTypes, MessageButton>;
 
 export enum PaginatorButtonTypeOrder {
   FIRST = "FIRST",
   SECOND = "SECOND",
   THIRD = "THIRD"
 }
-export type PaginatorButtonTypeOrderResolvable =
+export type ButtonPaginatorTypeOrderResolvable =
   | keyof typeof PaginatorButtonTypeOrder
   | PaginatorButtonTypeOrder;
 
-export type PaginatorButtonTypeOrders = Record<
+export type ButtonPaginatorTypeOrders = Record<
   PaginatorButtonTypeOrder,
-  PaginatorButtonTypesResolvable
+  ButtonPaginatorTypesResolvable
 >;
 
-export enum PaginatorButtonDirection {
+export enum ButtonPaginatorDirection {
   NEXT = "NEXT",
   PREV = "PREV"
 }
-export type PaginatorButtonDirectionResolvable =
-  | keyof typeof PaginatorButtonDirection
-  | PaginatorButtonDirection;
+export type ButtonPaginatorDirectionResolvable =
+  | keyof typeof ButtonPaginatorDirection
+  | ButtonPaginatorDirection;
 
-export interface PaginatorDeniedOptions {
+export interface ButtonPaginatorDeniedOptions {
   content: Page;
   ephemeral?: boolean;
 }

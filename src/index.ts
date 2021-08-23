@@ -1,2 +1,2 @@
 export * from "./lib/types";
-export * from "./structures/Paginator";
+export * from "./structures/ButtonPaginator";

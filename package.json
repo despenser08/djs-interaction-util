@@ -1,7 +1,7 @@
 {
-  "name": "djs-button-list",
+  "name": "djs-interaction-util",
   "version": "1.0.3",
-  "description": "Button paginator for discord.js",
+  "description": "Discord Interaction Utils for discord.js",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/despenser08/djs-button-list.git"
+    "url": "git+https://github.com/despenser08/djs-interaction-util.git"
   },
   "keywords": [
     "discord",
@@ -22,9 +22,9 @@
   "author": "despenser08 <despenser08@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/despenser08/djs-button-list/issues"
+    "url": "https://github.com/despenser08/djs-interaction-util/issues"
   },
-  "homepage": "https://github.com/despenser08/djs-button-list#readme",
+  "homepage": "https://github.com/despenser08/djs-interaction-util#readme",
   "peerDependencies": {
     "discord.js": "^13"
   },

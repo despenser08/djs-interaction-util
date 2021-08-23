@@ -6,21 +6,21 @@ import {
   MessageComponentInteraction
 } from "discord.js";
 import {
-  PaginatorButton,
-  PaginatorButtonDirection,
-  PaginatorButtonDirectionResolvable,
-  PaginatorButtonTypesResolvable,
-  PaginatorDeniedOptions,
+  ButtonPaginatorButton,
+  ButtonPaginatorDirection,
+  ButtonPaginatorDirectionResolvable,
+  ButtonPaginatorTypesResolvable,
+  ButtonPaginatorDeniedOptions,
   Page
   // PaginatorButtonTypeOrders
 } from "../lib/types";
 
-export class Paginator {
+export class ButtonPaginator {
   public pages: Page[];
-  public denied: PaginatorDeniedOptions;
+  public denied: ButtonPaginatorDeniedOptions;
   public timeout: number;
   public index: number;
-  public buttons: PaginatorButton;
+  public buttons: ButtonPaginatorButton;
   // public buttonOrder: PaginatorButtonTypeOrders;
   public buttonCollector?: InteractionCollector<MessageComponentInteraction>;
   public message?: Message;
@@ -34,10 +34,10 @@ export class Paginator {
     buttonOrder */
   }: {
     pages?: Page[];
-    denied?: PaginatorDeniedOptions;
+    denied?: ButtonPaginatorDeniedOptions;
     timeout?: number;
     index?: number;
-    buttons?: PaginatorButton;
+    buttons?: ButtonPaginatorButton;
     // buttonOrder?: PaginatorButtonTypeOrders;
   } = {}) {
     this.pages = pages ?? [];
@@ -78,14 +78,14 @@ export class Paginator {
   }
 
   public setButton(
-    buttonType: PaginatorButtonTypesResolvable,
+    buttonType: ButtonPaginatorTypesResolvable,
     button: MessageButton
   ) {
     this.buttons[buttonType] = button;
     return this;
   }
 
-  public setButtons(buttons: PaginatorButton) {
+  public setButtons(buttons: ButtonPaginatorButton) {
     this.buttons = buttons;
     return this;
   }
@@ -98,8 +98,8 @@ export class Paginator {
     return this;
   }
 
-  public moveIndex(direction: PaginatorButtonDirectionResolvable) {
-    if (PaginatorButtonDirection[direction] === PaginatorButtonDirection.PREV)
+  public moveIndex(direction: ButtonPaginatorDirectionResolvable) {
+    if (ButtonPaginatorDirection[direction] === ButtonPaginatorDirection.PREV)
       this.setIndex(this.index > 0 ? this.index - 1 : this.pages.length - 1);
     else this.setIndex(this.index + 1 < this.pages.length ? this.index + 1 : 0);
     return this;
@@ -124,7 +124,7 @@ export class Paginator {
     return this;
   }
 
-  public setDenied(denied: PaginatorDeniedOptions) {
+  public setDenied(denied: ButtonPaginatorDeniedOptions) {
     this.denied = denied;
     return this;
   }
