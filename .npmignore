@@ -18,13 +18,23 @@ pids
 # Dependency directories
 node_modules/
 
-# TypeScript cache
-*.tsbuildinfo
-
 # Optional npm cache directory
 .npm
 
 # Optional eslint cache
 .eslintcache
-# Generate output
-dist
+
+# Yarn Integrity file
+.yarn-Integrity
+
+# Lock files
+package-lock.json
+yarn.lock
+
+# Development
+.github/
+.editorconfig
+.eslintrc
+.gitignore
+.prettierrc
+tsconfig.json
