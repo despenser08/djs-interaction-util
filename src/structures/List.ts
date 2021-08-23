@@ -41,7 +41,10 @@ export class List {
     // buttonOrder?: ListButtonTypeOrders;
   } = {}) {
     this.pages = pages ?? [];
-    this.denied = denied ?? { content: { content: null }, ephemeral: true };
+    this.denied = denied ?? {
+      content: { content: "Only the requested person can control it." },
+      ephemeral: true
+    };
     this.timeout = timeout ?? 12e4;
     this.index = index ?? 0;
 
