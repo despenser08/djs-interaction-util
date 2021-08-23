@@ -6,22 +6,22 @@ import {
   MessageComponentInteraction
 } from "discord.js";
 import {
-  ListButton,
-  ListButtonDirection,
-  ListButtonDirectionResolvable,
-  // ListButtonTypeOrders,
-  ListButtonTypesResolvable,
-  ListDeniedOptions,
+  PaginatorButton,
+  PaginatorButtonDirection,
+  PaginatorButtonDirectionResolvable,
+  PaginatorButtonTypesResolvable,
+  PaginatorDeniedOptions,
   Page
+  // PaginatorButtonTypeOrders
 } from "../lib/types";
 
-export class List {
+export class Paginator {
   public pages: Page[];
-  public denied: ListDeniedOptions;
+  public denied: PaginatorDeniedOptions;
   public timeout: number;
   public index: number;
-  public buttons: ListButton;
-  // public buttonOrder: ListButtonTypeOrders;
+  public buttons: PaginatorButton;
+  // public buttonOrder: PaginatorButtonTypeOrders;
   public buttonCollector?: InteractionCollector<MessageComponentInteraction>;
   public message?: Message;
 
@@ -30,15 +30,15 @@ export class List {
     denied,
     timeout,
     index,
-    buttons
-  }: // buttonOrder
-  {
+    buttons /* ,
+    buttonOrder */
+  }: {
     pages?: Page[];
-    denied?: ListDeniedOptions;
+    denied?: PaginatorDeniedOptions;
     timeout?: number;
     index?: number;
-    buttons?: ListButton;
-    // buttonOrder?: ListButtonTypeOrders;
+    buttons?: PaginatorButton;
+    // buttonOrder?: PaginatorButtonTypeOrders;
   } = {}) {
     this.pages = pages ?? [];
     this.denied = denied ?? {
@@ -63,11 +63,11 @@ export class List {
         .setStyle("PRIMARY")
     };
 
-    // this.buttonOrder = buttonOrder ?? {
-    //   FIRST: "PREV",
-    //   SECOND: "CANCEL",
-    //   THIRD: "NEXT"
-    // };
+    /* this.buttonOrder = buttonOrder ?? {
+      FIRST: "PREV",
+      SECOND: "CANCEL",
+      THIRD: "NEXT"
+    }; */
   }
 
   get currentPage() {
@@ -80,7 +80,7 @@ export class List {
   }
 
   public setButton(
-    buttonType: ListButtonTypesResolvable,
+    buttonType: PaginatorButtonTypesResolvable,
     button: MessageButton
   ) {
     this.buttons[buttonType] = button;
@@ -95,8 +95,8 @@ export class List {
     return this;
   }
 
-  public moveIndex(direction: ListButtonDirectionResolvable) {
-    if (ListButtonDirection[direction] === ListButtonDirection.PREV)
+  public moveIndex(direction: PaginatorButtonDirectionResolvable) {
+    if (PaginatorButtonDirection[direction] === PaginatorButtonDirection.PREV)
       this.setIndex(this.index > 0 ? this.index - 1 : this.pages.length - 1);
     else this.setIndex(this.index + 1 < this.pages.length ? this.index + 1 : 0);
     return this;

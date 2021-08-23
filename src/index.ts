@@ -1,2 +1,2 @@
 export * from "./lib/types";
-export * from "./structures/List";
+export * from "./structures/Paginator";
