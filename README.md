@@ -5,7 +5,10 @@ Button paginator for discord.js
 ## Install
 
 ```bash
+# npm
 npm install djs-button-list
+
+# yarn
 yarn add djs-button-list
 ```
 
