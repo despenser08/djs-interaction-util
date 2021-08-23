@@ -1,6 +1,6 @@
 {
   "name": "djs-button-list",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Button paginator for discord.js",
   "main": "dist/index.js",
   "scripts": {
