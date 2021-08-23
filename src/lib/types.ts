@@ -1,6 +1,6 @@
-import { MessageButton, MessageOptions, MessagePayload } from "discord.js";
+import { MessageButton, MessageOptions } from "discord.js";
 
-export type Page = string | MessagePayload | MessageOptions;
+export type Page = MessageOptions;
 
 export enum ListButtonTypes {
   PREV = "PREV",

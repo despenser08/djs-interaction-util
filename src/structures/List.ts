@@ -1,6 +1,7 @@
 import {
   InteractionCollector,
   Message,
+  MessageActionRow,
   MessageButton,
   MessageComponentInteraction
 } from "discord.js";
@@ -40,7 +41,7 @@ export class List {
     // buttonOrder?: ListButtonTypeOrders;
   } = {}) {
     this.pages = pages ?? [];
-    this.denied = denied ?? { content: "", ephemeral: true };
+    this.denied = denied ?? { content: { content: null }, ephemeral: true };
     this.timeout = timeout ?? 12e4;
     this.index = index ?? 0;
 
@@ -121,9 +122,17 @@ export class List {
     if (!this.pages.length) throw new Error("There are no pages.");
     if (!this.buttons) throw new Error("There are no pages.");
 
+    const components = [
+      new MessageActionRow().addComponents(
+        this.buttons.PREV,
+        this.buttons.CANCEL,
+        this.buttons.NEXT
+      )
+    ];
+
     this.message = editMessage
-      ? await editMessage.edit(this.currentPage)
-      : await message.reply(this.currentPage);
+      ? await editMessage.edit({ ...this.currentPage, components })
+      : await message.reply({ ...this.currentPage, components });
 
     this.buttonCollector = this.message.createMessageComponentCollector({
       time: this.timeout
