@@ -47,7 +47,6 @@ export class Paginator {
     };
     this.timeout = timeout ?? 12e4;
     this.index = index ?? 0;
-
     this.buttons = buttons ?? {
       PREV: new MessageButton()
         .setCustomId("prev")
@@ -62,7 +61,6 @@ export class Paginator {
         .setLabel("다음")
         .setStyle("PRIMARY")
     };
-
     /* this.buttonOrder = buttonOrder ?? {
       FIRST: "PREV",
       SECOND: "CANCEL",
@@ -70,7 +68,7 @@ export class Paginator {
     }; */
   }
 
-  get currentPage() {
+  public get currentPage() {
     return this.pages[this.index];
   }
 
@@ -84,6 +82,11 @@ export class Paginator {
     button: MessageButton
   ) {
     this.buttons[buttonType] = button;
+    return this;
+  }
+
+  public setButtons(buttons: PaginatorButton) {
+    this.buttons = buttons;
     return this;
   }
 
@@ -118,6 +121,11 @@ export class Paginator {
 
   public setPages(pages: Page[]) {
     this.pages = pages;
+    return this;
+  }
+
+  public setDenied(denied: PaginatorDeniedOptions) {
+    this.denied = denied;
     return this;
   }
 
