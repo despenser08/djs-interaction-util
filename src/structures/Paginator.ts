@@ -177,6 +177,8 @@ export class Paginator {
 
     this.buttonCollector.on("end", () => {
       this.message?.edit({ components: [] });
+      this.message = undefined;
+      this.buttonCollector = undefined;
     });
 
     return this;
@@ -184,7 +186,5 @@ export class Paginator {
 
   public stop() {
     this.buttonCollector?.stop();
-    this.buttonCollector = undefined;
-    this.message = undefined;
   }
 }
