@@ -1,35 +1,35 @@
-# djs-button-list
+# djs-interaction-util
 
-Button paginator for discord.js
+Discord Interaction Utils for discord.js
 
 ## Install
 
 ```bash
 # npm
-npm install discord.js djs-button-list
+npm install discord.js djs-interaction-util
 
 # yarn
-yarn add discord.js djs-button-list
+yarn add discord.js djs-interaction-util
 ```
 
 This package only works on discord.js@13+.
 
 ## Example
 
-### Paginator example
+### Button Paginator example
 
 ```ts
-import { List } from "djs-button-list";
+import { ButtonPaginator } from "djs-interaction-util";
 
-const list = new List({
+const paginator = new ButtonPaginator({
   pages: [{ content: null, embeds: [new MessageEmbed().setDescription("1")] }]
 });
 
-list.addPage({
+paginator.addPage({
   content: null,
   embeds: [new MessageEmbed().setDescription("2")]
 });
-list.run(message);
+paginator.run(message);
 ```
 
 I will update this page soon!
