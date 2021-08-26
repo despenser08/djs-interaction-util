@@ -4,7 +4,7 @@ export type Page = MessageOptions;
 
 export enum ButtonPaginatorTypes {
   PREV = "PREV",
-  CANCEL = "CANCEL",
+  STOP = "STOP",
   NEXT = "NEXT"
 }
 export type ButtonPaginatorTypesResolvable =

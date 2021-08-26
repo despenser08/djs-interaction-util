@@ -22,7 +22,7 @@ export class ButtonPaginator {
   public index: number;
   public buttons: ButtonPaginatorButton;
   // public buttonOrder: PaginatorButtonTypeOrders;
-  public additionalButtons: MessageActionRow[];
+  public actionRows: MessageActionRow[];
   public buttonCollector?: InteractionCollector<MessageComponentInteraction>;
   public message?: Message;
 
@@ -33,7 +33,7 @@ export class ButtonPaginator {
     index,
     buttons /* ,
     buttonOrder */,
-    additionalButtons
+    actionRows
   }: {
     pages?: Page[];
     denied?: ButtonPaginatorDeniedOptions;
@@ -41,7 +41,7 @@ export class ButtonPaginator {
     index?: number;
     buttons?: ButtonPaginatorButton;
     // buttonOrder?: PaginatorButtonTypeOrders;
-    additionalButtons?: MessageActionRow[];
+    actionRows?: MessageActionRow[];
   } = {}) {
     this.pages = pages ?? [];
     this.denied = denied ?? {
@@ -53,21 +53,21 @@ export class ButtonPaginator {
     this.buttons = buttons ?? {
       PREV: new MessageButton()
         .setCustomId("prev")
-        .setLabel("이전")
+        .setLabel("Prev")
         .setStyle("PRIMARY"),
-      CANCEL: new MessageButton()
-        .setCustomId("cancel")
-        .setLabel("취소")
+      STOP: new MessageButton()
+        .setCustomId("stop")
+        .setLabel("Stop")
         .setStyle("SECONDARY"),
       NEXT: new MessageButton()
-        .setCustomId("next")
+        .setCustomId("Next")
         .setLabel("다음")
         .setStyle("PRIMARY")
     };
-    this.additionalButtons = additionalButtons ?? [];
+    this.actionRows = actionRows ?? [];
     /* this.buttonOrder = buttonOrder ?? {
       FIRST: "PREV",
-      SECOND: "CANCEL",
+      SECOND: "STOP",
       THIRD: "NEXT"
     }; */
   }
@@ -140,10 +140,10 @@ export class ButtonPaginator {
     const components = [
       new MessageActionRow().addComponents(
         this.buttons.PREV,
-        this.buttons.CANCEL,
+        this.buttons.STOP,
         this.buttons.NEXT
       ),
-      ...this.additionalButtons
+      ...this.actionRows
     ];
 
     this.message = editMessage
@@ -163,7 +163,7 @@ export class ButtonPaginator {
             this.moveIndex("PREV");
             break;
 
-          case this.buttons.CANCEL.customId:
+          case this.buttons.STOP.customId:
             return this.buttonCollector?.stop();
 
           case this.buttons.NEXT.customId:
