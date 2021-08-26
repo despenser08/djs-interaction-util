@@ -22,6 +22,7 @@ export class ButtonPaginator {
   public index: number;
   public buttons: ButtonPaginatorButton;
   // public buttonOrder: PaginatorButtonTypeOrders;
+  public additionalButtons: MessageActionRow[];
   public buttonCollector?: InteractionCollector<MessageComponentInteraction>;
   public message?: Message;
 
@@ -31,7 +32,8 @@ export class ButtonPaginator {
     timeout,
     index,
     buttons /* ,
-    buttonOrder */
+    buttonOrder */,
+    additionalButtons
   }: {
     pages?: Page[];
     denied?: ButtonPaginatorDeniedOptions;
@@ -39,6 +41,7 @@ export class ButtonPaginator {
     index?: number;
     buttons?: ButtonPaginatorButton;
     // buttonOrder?: PaginatorButtonTypeOrders;
+    additionalButtons?: MessageActionRow[];
   } = {}) {
     this.pages = pages ?? [];
     this.denied = denied ?? {
@@ -61,6 +64,7 @@ export class ButtonPaginator {
         .setLabel("다음")
         .setStyle("PRIMARY")
     };
+    this.additionalButtons = additionalButtons ?? [];
     /* this.buttonOrder = buttonOrder ?? {
       FIRST: "PREV",
       SECOND: "CANCEL",
@@ -138,7 +142,8 @@ export class ButtonPaginator {
         this.buttons.PREV,
         this.buttons.CANCEL,
         this.buttons.NEXT
-      )
+      ),
+      ...this.additionalButtons
     ];
 
     this.message = editMessage
