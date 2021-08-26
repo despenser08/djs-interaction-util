@@ -5,6 +5,7 @@ import {
   MessageButton,
   MessageComponentInteraction
 } from "discord.js";
+import { PaginatorDefaultButton } from "../lib/constant";
 import {
   ButtonPaginatorButton,
   ButtonPaginatorDirection,
@@ -50,20 +51,7 @@ export class ButtonPaginator {
     };
     this.timeout = timeout ?? 12e4;
     this.index = index ?? 0;
-    this.buttons = buttons ?? {
-      PREV: new MessageButton()
-        .setCustomId("prev")
-        .setLabel("Prev")
-        .setStyle("PRIMARY"),
-      STOP: new MessageButton()
-        .setCustomId("stop")
-        .setLabel("Stop")
-        .setStyle("SECONDARY"),
-      NEXT: new MessageButton()
-        .setCustomId("Next")
-        .setLabel("다음")
-        .setStyle("PRIMARY")
-    };
+    this.buttons = buttons ?? PaginatorDefaultButton;
     this.actionRows = actionRows ?? [];
     /* this.buttonOrder = buttonOrder ?? {
       FIRST: "PREV",
