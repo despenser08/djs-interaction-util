@@ -10,7 +10,7 @@ export const PaginatorDefaultButton = {
     .setLabel("Stop")
     .setStyle("SECONDARY"),
   NEXT: new MessageButton()
-    .setCustomId("Next")
-    .setLabel("다음")
+    .setCustomId("next")
+    .setLabel("Next")
     .setStyle("PRIMARY")
 };
