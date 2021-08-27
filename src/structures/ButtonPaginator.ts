@@ -153,7 +153,7 @@ export class ButtonPaginator {
         }
 
         await this.message?.removeAttachments();
-        await it.editReply(this.currentPage);
+        await it.editReply({ content: null, ...this.currentPage });
       } else {
         await it.deferReply({
           ephemeral: this.denied.ephemeral ?? true
@@ -163,7 +163,6 @@ export class ButtonPaginator {
     });
 
     this.buttonCollector.on("end", () => {
-      this.message?.removeAttachments();
       this.message?.edit({ components: [...this.actionRows] });
       this.message = undefined;
       this.buttonCollector = undefined;
