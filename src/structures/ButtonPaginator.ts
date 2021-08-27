@@ -152,6 +152,7 @@ export class ButtonPaginator {
             break;
         }
 
+        await this.message?.removeAttachments();
         await it.editReply(this.currentPage);
       } else {
         await it.deferReply({
@@ -162,7 +163,8 @@ export class ButtonPaginator {
     });
 
     this.buttonCollector.on("end", () => {
-      this.message?.edit({ components: [] });
+      this.message?.removeAttachments();
+      this.message?.edit({ components: [...this.actionRows] });
       this.message = undefined;
       this.buttonCollector = undefined;
     });
