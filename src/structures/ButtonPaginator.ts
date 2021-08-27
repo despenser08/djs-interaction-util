@@ -128,7 +128,12 @@ export class ButtonPaginator {
     ];
 
     this.message = editMessage
-      ? await editMessage.edit({ ...this.currentPage, components })
+      ? await editMessage.edit({
+          content: null,
+          embeds: null,
+          ...this.currentPage,
+          components
+        })
       : await message.reply({ ...this.currentPage, components });
 
     this.buttonCollector = this.message.createMessageComponentCollector({
@@ -153,7 +158,7 @@ export class ButtonPaginator {
         }
 
         await this.message?.removeAttachments();
-        await it.editReply({ content: null, ...this.currentPage });
+        await it.editReply({ content: null, embeds: [], ...this.currentPage });
       } else {
         await it.deferReply({
           ephemeral: this.denied.ephemeral ?? true
