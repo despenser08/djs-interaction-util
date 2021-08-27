@@ -1,4 +1,4 @@
-import { MessageButton, MessageOptions } from "discord.js";
+import { MessageActionRow, MessageButton, MessageOptions } from "discord.js";
 
 export type Page = MessageOptions;
 
@@ -38,4 +38,14 @@ export type ButtonPaginatorDirectionResolvable =
 export interface ButtonPaginatorDeniedOptions {
   content: Page;
   ephemeral?: boolean;
+}
+
+export interface ButtonPaginatorOptions {
+  pages?: Page[];
+  denied?: ButtonPaginatorDeniedOptions;
+  timeout?: number;
+  index?: number;
+  buttons?: ButtonPaginatorButton;
+  // buttonOrder?: PaginatorButtonTypeOrders;
+  actionRows?: MessageActionRow[];
 }

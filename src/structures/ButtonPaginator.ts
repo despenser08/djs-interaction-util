@@ -12,7 +12,8 @@ import {
   ButtonPaginatorDirectionResolvable,
   ButtonPaginatorTypesResolvable,
   ButtonPaginatorDeniedOptions,
-  Page
+  Page,
+  ButtonPaginatorOptions
   // PaginatorButtonTypeOrders
 } from "../lib/types";
 
@@ -35,15 +36,7 @@ export class ButtonPaginator {
     buttons /* ,
     buttonOrder */,
     actionRows
-  }: {
-    pages?: Page[];
-    denied?: ButtonPaginatorDeniedOptions;
-    timeout?: number;
-    index?: number;
-    buttons?: ButtonPaginatorButton;
-    // buttonOrder?: PaginatorButtonTypeOrders;
-    actionRows?: MessageActionRow[];
-  } = {}) {
+  }: ButtonPaginatorOptions = {}) {
     this.pages = pages ?? [];
     this.denied = denied ?? {
       content: { content: "Only the requested person can control it." },
