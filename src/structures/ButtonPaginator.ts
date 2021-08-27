@@ -130,7 +130,7 @@ export class ButtonPaginator {
     this.message = editMessage
       ? await editMessage.edit({
           content: null,
-          embeds: null,
+          embeds: [],
           ...this.currentPage,
           components
         })
