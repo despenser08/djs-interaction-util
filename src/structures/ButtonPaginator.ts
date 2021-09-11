@@ -25,8 +25,9 @@ export class ButtonPaginator {
   public buttons: ButtonPaginatorButton;
   // public buttonOrder: PaginatorButtonTypeOrders;
   public actionRows: MessageActionRow[];
-  public buttonCollector?: InteractionCollector<MessageComponentInteraction>;
-  public message?: Message;
+  public buttonCollector: InteractionCollector<MessageComponentInteraction> | null =
+    null;
+  public message: Message | null = null;
 
   public constructor({
     pages,
@@ -55,6 +56,19 @@ export class ButtonPaginator {
 
   public get currentPage() {
     return this.pages[this.index];
+  }
+
+  public get components() {
+    return [
+      new MessageActionRow().addComponents(
+        this.buttons.PREV,
+        this.buttons.STOP.setLabel(
+          `${this.buttons.STOP.label} (${this.index + 1}/${this.pages.length})`
+        ),
+        this.buttons.NEXT
+      ),
+      ...this.actionRows
+    ];
   }
 
   public setTimeout(timeout: number) {
@@ -118,23 +132,17 @@ export class ButtonPaginator {
     if (!this.pages.length) throw new Error("There are no pages.");
     if (!this.buttons) throw new Error("There are no pages.");
 
-    const components = [
-      new MessageActionRow().addComponents(
-        this.buttons.PREV,
-        this.buttons.STOP,
-        this.buttons.NEXT
-      ),
-      ...this.actionRows
-    ];
-
     this.message = editMessage
       ? await editMessage.edit({
           content: null,
           embeds: [],
           ...this.currentPage,
-          components
+          components: this.components
         })
-      : await message.reply({ ...this.currentPage, components });
+      : await message.reply({
+          ...this.currentPage,
+          components: this.components
+        });
 
     this.buttonCollector = this.message.createMessageComponentCollector({
       time: this.timeout
@@ -157,8 +165,15 @@ export class ButtonPaginator {
             break;
         }
 
-        await this.message?.removeAttachments();
-        await it.editReply({ content: null, embeds: [], ...this.currentPage });
+        if (this.message?.attachments.size ?? 0 > 0)
+          await this.message?.removeAttachments();
+
+        await it.editReply({
+          content: null,
+          embeds: [],
+          ...this.currentPage,
+          components: this.components
+        });
       } else {
         await it.deferReply({
           ephemeral: this.denied.ephemeral ?? true
@@ -169,8 +184,8 @@ export class ButtonPaginator {
 
     this.buttonCollector.on("end", () => {
       this.message?.edit({ components: [...this.actionRows] });
-      this.message = undefined;
-      this.buttonCollector = undefined;
+      this.message = null;
+      this.buttonCollector = null;
     });
 
     return this;
