@@ -59,12 +59,13 @@ export class ButtonPaginator {
   }
 
   public get components() {
+    const stop = new MessageButton(this.buttons.STOP);
+    stop.setLabel(`${stop.label} (${this.index + 1}/${this.pages.length})`);
+
     return [
       new MessageActionRow().addComponents(
         this.buttons.PREV,
-        this.buttons.STOP.setLabel(
-          `${this.buttons.STOP.label} (${this.index + 1}/${this.pages.length})`
-        ),
+        stop,
         this.buttons.NEXT
       ),
       ...this.actionRows
