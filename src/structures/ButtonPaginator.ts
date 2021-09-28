@@ -13,17 +13,29 @@ import {
   ButtonPaginatorTypesResolvable,
   ButtonPaginatorDeniedOptions,
   Page,
-  ButtonPaginatorOptions
-  // PaginatorButtonTypeOrders
+  ButtonPaginatorOptions,
+  ButtonPaginatorTypeOrders
 } from "../lib/types";
+import { EventEmitter } from "events";
 
-export class ButtonPaginator {
+export interface ButtonPaginator {
+  on(event: "start", listener: (message: Message) => void): this;
+
+  on(event: "end", listener: (message: Message) => void): this;
+
+  on(
+    event: "actionInteraction",
+    listener: (interaction: MessageComponentInteraction) => void
+  ): this;
+}
+
+export class ButtonPaginator extends EventEmitter {
   public pages: Page[];
   public denied: ButtonPaginatorDeniedOptions;
   public timeout: number;
   public index: number;
   public buttons: ButtonPaginatorButton;
-  // public buttonOrder: PaginatorButtonTypeOrders;
+  public buttonOrder: ButtonPaginatorTypeOrders;
   public actionRows: MessageActionRow[];
   public buttonCollector: InteractionCollector<MessageComponentInteraction> | null =
     null;
@@ -35,11 +47,13 @@ export class ButtonPaginator {
     denied,
     timeout,
     index,
-    buttons /* ,
-    buttonOrder */,
+    buttons,
+    buttonOrder,
     actionRows,
     showPageIndex
   }: ButtonPaginatorOptions = {}) {
+    super();
+
     this.pages = pages ?? [];
     this.denied = denied ?? {
       content: { content: "Only the requested person can control it." },
@@ -49,11 +63,11 @@ export class ButtonPaginator {
     this.index = index ?? 0;
     this.buttons = buttons ?? PaginatorDefaultButton;
     this.actionRows = actionRows ?? [];
-    /* this.buttonOrder = buttonOrder ?? {
+    this.buttonOrder = buttonOrder ?? {
       FIRST: "PREV",
       SECOND: "STOP",
       THIRD: "NEXT"
-    }; */
+    };
     this.showPageIndex = showPageIndex ?? true;
   }
 
@@ -62,15 +76,17 @@ export class ButtonPaginator {
   }
 
   public get components() {
-    const stop = new MessageButton(this.buttons.STOP);
+    const second = new MessageButton(this.buttons[this.buttonOrder.SECOND]);
     if (this.showPageIndex)
-      stop.setLabel(`${stop.label} (${this.index + 1}/${this.pages.length})`);
+      second.setLabel(
+        `${second.label} (${this.index + 1}/${this.pages.length})`
+      );
 
     return [
       new MessageActionRow().addComponents(
-        this.buttons.PREV,
-        stop,
-        this.buttons.NEXT
+        this.buttons[this.buttonOrder.FIRST],
+        second,
+        this.buttons[this.buttonOrder.THIRD]
       ),
       ...this.actionRows
     ];
@@ -133,6 +149,21 @@ export class ButtonPaginator {
     return this;
   }
 
+  public setActionRows(actionRows: MessageActionRow[]) {
+    this.actionRows = actionRows;
+    return this;
+  }
+
+  public setPageIndex(show: boolean) {
+    this.showPageIndex = show;
+    return this;
+  }
+
+  public setOrder(order: ButtonPaginatorTypeOrders) {
+    this.buttonOrder = order;
+    return this;
+  }
+
   public async run(message: Message, editMessage?: Message) {
     if (!this.pages.length) throw new Error("There are no pages.");
     if (!this.buttons) throw new Error("There are no pages.");
@@ -168,6 +199,17 @@ export class ButtonPaginator {
           case this.buttons.NEXT.customId:
             this.moveIndex("NEXT");
             break;
+
+          default:
+            if (
+              this.actionRows.find((row) =>
+                row.components.find(
+                  (component) => component.customId === it.customId
+                )
+              )
+            )
+              this.emit("actionInteraction", it);
+            return;
         }
 
         if (this.message?.attachments.size ?? 0 > 0)
@@ -188,11 +230,24 @@ export class ButtonPaginator {
     });
 
     this.buttonCollector.on("end", () => {
-      this.message?.edit({ components: [...this.actionRows] });
-      this.message = null;
+      this.message?.edit({
+        components: [
+          ...this.actionRows.map((row) =>
+            new MessageActionRow().addComponents(
+              row.components.filter(
+                (component) =>
+                  component.type === "BUTTON" && component.style === "LINK"
+              )
+            )
+          )
+        ]
+      });
       this.buttonCollector = null;
+
+      this.emit("end", this.message);
     });
 
+    this.emit("start", this.message);
     return this;
   }
 

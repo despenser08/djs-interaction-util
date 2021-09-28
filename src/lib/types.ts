@@ -13,17 +13,13 @@ export type ButtonPaginatorTypesResolvable =
 
 export type ButtonPaginatorButton = Record<ButtonPaginatorTypes, MessageButton>;
 
-export enum PaginatorButtonTypeOrder {
+export enum ButtonPaginatorTypeOrder {
   FIRST = "FIRST",
   SECOND = "SECOND",
   THIRD = "THIRD"
 }
-export type ButtonPaginatorTypeOrderResolvable =
-  | keyof typeof PaginatorButtonTypeOrder
-  | PaginatorButtonTypeOrder;
-
 export type ButtonPaginatorTypeOrders = Record<
-  PaginatorButtonTypeOrder,
+  ButtonPaginatorTypeOrder,
   ButtonPaginatorTypesResolvable
 >;
 
@@ -46,7 +42,7 @@ export interface ButtonPaginatorOptions {
   timeout?: number;
   index?: number;
   buttons?: ButtonPaginatorButton;
-  // buttonOrder?: PaginatorButtonTypeOrders;
+  buttonOrder?: ButtonPaginatorTypeOrders;
   actionRows?: MessageActionRow[];
   showPageIndex?: boolean;
 }
