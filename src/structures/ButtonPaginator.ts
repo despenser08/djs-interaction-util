@@ -28,6 +28,7 @@ export class ButtonPaginator {
   public buttonCollector: InteractionCollector<MessageComponentInteraction> | null =
     null;
   public message: Message | null = null;
+  public showPageIndex: boolean;
 
   public constructor({
     pages,
@@ -36,7 +37,8 @@ export class ButtonPaginator {
     index,
     buttons /* ,
     buttonOrder */,
-    actionRows
+    actionRows,
+    showPageIndex
   }: ButtonPaginatorOptions = {}) {
     this.pages = pages ?? [];
     this.denied = denied ?? {
@@ -52,6 +54,7 @@ export class ButtonPaginator {
       SECOND: "STOP",
       THIRD: "NEXT"
     }; */
+    this.showPageIndex = showPageIndex ?? true;
   }
 
   public get currentPage() {
@@ -60,7 +63,8 @@ export class ButtonPaginator {
 
   public get components() {
     const stop = new MessageButton(this.buttons.STOP);
-    stop.setLabel(`${stop.label} (${this.index + 1}/${this.pages.length})`);
+    if (this.showPageIndex)
+      stop.setLabel(`${stop.label} (${this.index + 1}/${this.pages.length})`);
 
     return [
       new MessageActionRow().addComponents(

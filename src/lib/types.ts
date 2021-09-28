@@ -48,4 +48,5 @@ export interface ButtonPaginatorOptions {
   buttons?: ButtonPaginatorButton;
   // buttonOrder?: PaginatorButtonTypeOrders;
   actionRows?: MessageActionRow[];
+  showPageIndex?: boolean;
 }
