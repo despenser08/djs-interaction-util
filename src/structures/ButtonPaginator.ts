@@ -1,4 +1,5 @@
 import {
+  BaseCommandInteraction,
   InteractionCollector,
   Message,
   MessageActionRow,
@@ -37,7 +38,7 @@ export class ButtonPaginator extends EventEmitter {
   public buttons: ButtonPaginatorButton;
   public buttonOrder: ButtonPaginatorTypeOrders;
   public actionRows: MessageActionRow[];
-  public buttonCollector: InteractionCollector<MessageComponentInteraction> | null =
+  public buttonCollector?: InteractionCollector<MessageComponentInteraction> | null =
     null;
   public message: Message | null = null;
   public showPageIndex: boolean;
@@ -164,28 +165,73 @@ export class ButtonPaginator extends EventEmitter {
     return this;
   }
 
-  public async run(message: Message, editMessage?: Message) {
+  public async run(
+    reply: BaseCommandInteraction | MessageComponentInteraction,
+    edit?: boolean
+  ): Promise<this>;
+  public async run(reply: Message, edit?: Message): Promise<this>;
+  public async run(
+    reply: BaseCommandInteraction | MessageComponentInteraction | Message,
+    edit?: boolean | Message
+  ) {
     if (!this.pages.length) throw new Error("There are no pages.");
     if (!this.buttons) throw new Error("There are no pages.");
 
-    this.message = editMessage
-      ? await editMessage.edit({
-          content: null,
-          embeds: [],
-          ...this.currentPage,
-          components: this.components
-        })
-      : await message.reply({
+    if (!edit) {
+      if (reply instanceof Message)
+        this.message = await reply.reply({
           ...this.currentPage,
           components: this.components
         });
+      else {
+        const fetched = await reply.reply({
+          ...this.currentPage,
+          components: this.components,
+          fetchReply: true
+        });
+        this.message =
+          fetched instanceof Message
+            ? fetched
+            : new Message(reply.client, fetched);
+      }
+    } else if (reply instanceof Message)
+      this.message = edit
+        ? await reply.edit({
+            content: null,
+            embeds: [],
+            ...this.currentPage,
+            components: this.components
+          })
+        : await reply.reply({
+            ...this.currentPage,
+            components: this.components
+          });
+    else {
+      const fetched = edit
+        ? await reply.editReply({
+            content: null,
+            embeds: [],
+            ...this.currentPage,
+            components: this.components
+          })
+        : await reply.reply({
+            ...this.currentPage,
+            components: this.components,
+            fetchReply: true
+          });
+      this.message =
+        fetched instanceof Message
+          ? fetched
+          : new Message(reply.client, fetched);
+    }
 
-    this.buttonCollector = this.message.createMessageComponentCollector({
+    this.buttonCollector = this.message?.createMessageComponentCollector({
       time: this.timeout
     });
 
-    this.buttonCollector.on("collect", async (it) => {
-      if (it.user.id === message.author.id) {
+    this.buttonCollector?.on("collect", async (it) => {
+      const user = reply instanceof Message ? reply.author : reply.member?.user;
+      if (it.user.id === user?.id) {
         await it.deferUpdate();
 
         switch (it.customId) {
@@ -229,7 +275,7 @@ export class ButtonPaginator extends EventEmitter {
       }
     });
 
-    this.buttonCollector.on("end", () => {
+    this.buttonCollector?.on("end", () => {
       this.message?.edit({
         components: [
           ...this.actionRows.map((row) =>
