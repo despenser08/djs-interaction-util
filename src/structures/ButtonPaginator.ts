@@ -194,19 +194,21 @@ export class ButtonPaginator extends EventEmitter {
             ? fetched
             : new Message(reply.client, fetched);
       }
-    } else if (reply instanceof Message)
-      this.message = edit
-        ? await reply.edit({
-            content: null,
-            embeds: [],
-            ...this.currentPage,
-            components: this.components
-          })
-        : await reply.reply({
-            ...this.currentPage,
-            components: this.components
-          });
-    else {
+    } else if (reply instanceof Message) {
+      if (edit instanceof Message)
+        this.message = edit
+          ? await edit.edit({
+              content: null,
+              embeds: [],
+              ...this.currentPage,
+              components: this.components
+            })
+          : await reply.reply({
+              ...this.currentPage,
+              components: this.components
+            });
+      else throw new TypeError("You must provide a message to edit.");
+    } else {
       const fetched = edit
         ? await reply.editReply({
             content: null,
