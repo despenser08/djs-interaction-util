@@ -22,13 +22,10 @@ This package only works on discord.js@13+.
 import { ButtonPaginator } from "djs-interaction-util";
 
 const paginator = new ButtonPaginator({
-  pages: [{ content: null, embeds: [new MessageEmbed().setDescription("1")] }]
+  pages: [{ embeds: [new MessageEmbed().setDescription("1")] }]
 });
 
-paginator.addPage({
-  content: null,
-  embeds: [new MessageEmbed().setDescription("2")]
-});
+paginator.addPage({ embeds: [new MessageEmbed().setDescription("2")] });
 paginator.run(message);
 ```
 
