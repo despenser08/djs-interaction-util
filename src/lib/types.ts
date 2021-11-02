@@ -7,9 +7,7 @@ export enum ButtonPaginatorTypes {
   STOP = "STOP",
   NEXT = "NEXT"
 }
-export type ButtonPaginatorTypesResolvable =
-  | keyof typeof ButtonPaginatorTypes
-  | ButtonPaginatorTypes;
+export type ButtonPaginatorTypesResolvable = keyof typeof ButtonPaginatorTypes | ButtonPaginatorTypes;
 
 export type ButtonPaginatorButton = Record<ButtonPaginatorTypes, MessageButton>;
 
@@ -18,18 +16,13 @@ export enum ButtonPaginatorTypeOrder {
   SECOND = "SECOND",
   THIRD = "THIRD"
 }
-export type ButtonPaginatorTypeOrders = Record<
-  ButtonPaginatorTypeOrder,
-  ButtonPaginatorTypesResolvable
->;
+export type ButtonPaginatorTypeOrders = Record<ButtonPaginatorTypeOrder, ButtonPaginatorTypesResolvable>;
 
 export enum ButtonPaginatorDirection {
   NEXT = "NEXT",
   PREV = "PREV"
 }
-export type ButtonPaginatorDirectionResolvable =
-  | keyof typeof ButtonPaginatorDirection
-  | ButtonPaginatorDirection;
+export type ButtonPaginatorDirectionResolvable = keyof typeof ButtonPaginatorDirection | ButtonPaginatorDirection;
 
 export interface ButtonPaginatorDeniedOptions {
   content: Page;

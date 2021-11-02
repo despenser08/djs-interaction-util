@@ -1,6 +1,6 @@
 {
   "name": "djs-interaction-util",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Discord Interaction Utils for discord.js",
   "main": "dist/index.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "build:check": "tsc --noEmit --incremental false",
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",
-    "prettier": "prettier --write **/*.{ts,js,json,yml,yaml}"
+    "format": "prettier --write \"**/*.{ts,js,json,yml}\""
   },
   "repository": {
     "type": "git",

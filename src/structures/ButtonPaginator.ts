@@ -1,11 +1,4 @@
-import {
-  BaseCommandInteraction,
-  InteractionCollector,
-  Message,
-  MessageActionRow,
-  MessageButton,
-  MessageComponentInteraction
-} from "discord.js";
+import { BaseCommandInteraction, InteractionCollector, Message, MessageActionRow, MessageButton, MessageComponentInteraction } from "discord.js";
 import { PaginatorDefaultButton } from "../lib/constant";
 import {
   ButtonPaginatorButton,
@@ -24,10 +17,7 @@ export interface ButtonPaginator {
 
   on(event: "end", listener: (message: Message) => void): this;
 
-  on(
-    event: "actionInteraction",
-    listener: (interaction: MessageComponentInteraction) => void
-  ): this;
+  on(event: "actionInteraction", listener: (interaction: MessageComponentInteraction) => void): this;
 }
 
 export class ButtonPaginator extends EventEmitter {
@@ -38,21 +28,11 @@ export class ButtonPaginator extends EventEmitter {
   public buttons: ButtonPaginatorButton;
   public buttonOrder: ButtonPaginatorTypeOrders;
   public actionRows: MessageActionRow[];
-  public buttonCollector?: InteractionCollector<MessageComponentInteraction> | null =
-    null;
+  public buttonCollector?: InteractionCollector<MessageComponentInteraction> | null = null;
   public message: Message | null = null;
   public showPageIndex: boolean;
 
-  public constructor({
-    pages,
-    denied,
-    timeout,
-    index,
-    buttons,
-    buttonOrder,
-    actionRows,
-    showPageIndex
-  }: ButtonPaginatorOptions = {}) {
+  public constructor({ pages, denied, timeout, index, buttons, buttonOrder, actionRows, showPageIndex }: ButtonPaginatorOptions = {}) {
     super();
 
     this.pages = pages ?? [];
@@ -78,17 +58,10 @@ export class ButtonPaginator extends EventEmitter {
 
   public get components() {
     const second = new MessageButton(this.buttons[this.buttonOrder.SECOND]);
-    if (this.showPageIndex)
-      second.setLabel(
-        `${second.label} (${this.index + 1}/${this.pages.length})`
-      );
+    if (this.showPageIndex) second.setLabel(`${second.label} (${this.index + 1}/${this.pages.length})`);
 
     return [
-      new MessageActionRow().addComponents(
-        this.buttons[this.buttonOrder.FIRST],
-        second,
-        this.buttons[this.buttonOrder.THIRD]
-      ),
+      new MessageActionRow().addComponents(this.buttons[this.buttonOrder.FIRST], second, this.buttons[this.buttonOrder.THIRD]),
       ...this.actionRows
     ];
   }
@@ -98,10 +71,7 @@ export class ButtonPaginator extends EventEmitter {
     return this;
   }
 
-  public setButton(
-    buttonType: ButtonPaginatorTypesResolvable,
-    button: MessageButton
-  ) {
+  public setButton(buttonType: ButtonPaginatorTypesResolvable, button: MessageButton) {
     this.buttons[buttonType] = button;
     return this;
   }
@@ -112,16 +82,14 @@ export class ButtonPaginator extends EventEmitter {
   }
 
   public setIndex(index: number) {
-    if (!this.hasPage(index))
-      throw new Error(`There are no page at index ${index}.`);
+    if (!this.hasPage(index)) throw new Error(`There are no page at index ${index}.`);
 
     this.index = index;
     return this;
   }
 
   public moveIndex(direction: ButtonPaginatorDirectionResolvable) {
-    if (ButtonPaginatorDirection[direction] === ButtonPaginatorDirection.PREV)
-      this.setIndex(this.index > 0 ? this.index - 1 : this.pages.length - 1);
+    if (ButtonPaginatorDirection[direction] === ButtonPaginatorDirection.PREV) this.setIndex(this.index > 0 ? this.index - 1 : this.pages.length - 1);
     else this.setIndex(this.index + 1 < this.pages.length ? this.index + 1 : 0);
     return this;
   }
@@ -165,15 +133,9 @@ export class ButtonPaginator extends EventEmitter {
     return this;
   }
 
-  public async run(
-    reply: BaseCommandInteraction | MessageComponentInteraction,
-    edit?: boolean
-  ): Promise<this>;
+  public async run(reply: BaseCommandInteraction | MessageComponentInteraction, edit?: boolean): Promise<this>;
   public async run(reply: Message, edit?: Message): Promise<this>;
-  public async run(
-    reply: BaseCommandInteraction | MessageComponentInteraction | Message,
-    edit?: boolean | Message
-  ) {
+  public async run(reply: BaseCommandInteraction | MessageComponentInteraction | Message, edit?: boolean | Message) {
     if (!this.pages.length) throw new Error("There are no pages.");
     if (!this.buttons) throw new Error("There are no pages.");
 
@@ -189,10 +151,7 @@ export class ButtonPaginator extends EventEmitter {
           components: this.components,
           fetchReply: true
         });
-        this.message =
-          fetched instanceof Message
-            ? fetched
-            : new Message(reply.client, fetched);
+        this.message = fetched instanceof Message ? fetched : new Message(reply.client, fetched);
       }
     } else if (reply instanceof Message) {
       if (edit instanceof Message)
@@ -221,10 +180,7 @@ export class ButtonPaginator extends EventEmitter {
             components: this.components,
             fetchReply: true
           });
-      this.message =
-        fetched instanceof Message
-          ? fetched
-          : new Message(reply.client, fetched);
+      this.message = fetched instanceof Message ? fetched : new Message(reply.client, fetched);
     }
 
     this.buttonCollector = this.message?.createMessageComponentCollector({
@@ -249,19 +205,12 @@ export class ButtonPaginator extends EventEmitter {
             break;
 
           default:
-            if (
-              this.actionRows.find((row) =>
-                row.components.find(
-                  (component) => component.customId === it.customId
-                )
-              )
-            )
+            if (this.actionRows.find((row) => row.components.find((component) => component.customId === it.customId)))
               this.emit("actionInteraction", it);
             return;
         }
 
-        if (this.message?.attachments.size ?? 0 > 0)
-          await this.message?.removeAttachments();
+        if (this.message?.attachments.size ?? 0 > 0) await this.message?.removeAttachments();
 
         await it.editReply({
           content: null,
@@ -281,12 +230,7 @@ export class ButtonPaginator extends EventEmitter {
       this.message?.edit({
         components: [
           ...this.actionRows.map((row) =>
-            new MessageActionRow().addComponents(
-              row.components.filter(
-                (component) =>
-                  component.type === "BUTTON" && component.style === "LINK"
-              )
-            )
+            new MessageActionRow().addComponents(row.components.filter((component) => component.type === "BUTTON" && component.style === "LINK"))
           )
         ]
       });
