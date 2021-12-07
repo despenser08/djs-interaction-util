@@ -3,7 +3,7 @@ import { CheckBoolDefaultButton } from "../lib/constant";
 import { Page, ButtonCheckBoolDeniedOptions, ButtonCheckBoolButton, ButtonCheckBoolOptions, ButtonCheckBoolTypesResolvable } from "../lib/types";
 import { EventEmitter } from "events";
 
-export interface ButtonPaginator {
+export interface ButtonCheckBool {
   on(event: "start", listener: (message: Message) => void): this;
 
   on(event: "end", listener: (message: Message, result: boolean | null) => void): this;
