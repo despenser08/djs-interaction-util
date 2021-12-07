@@ -219,9 +219,7 @@ export class ButtonPaginator extends EventEmitter {
           components: this.components
         });
       } else {
-        await it.deferReply({
-          ephemeral: this.denied.ephemeral ?? true
-        });
+        await it.deferReply({ ephemeral: this.denied.ephemeral });
         await it.editReply(this.denied.content);
       }
     });
