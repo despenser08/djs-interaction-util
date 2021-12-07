@@ -35,10 +35,6 @@ export class ButtonCheckBool extends EventEmitter {
     this.actionRows = actionRows ?? [];
   }
 
-  public get components() {
-    return [new MessageActionRow().addComponents(...this.buttons), ...this.actionRows];
-  }
-
   public setTimeout(timeout: number) {
     this.timeout = timeout;
     return this;
@@ -75,17 +71,18 @@ export class ButtonCheckBool extends EventEmitter {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise<boolean | null>(async (resolve, reject) => {
       if (!this.buttons) return reject(new Error("There are no pages."));
+      const components = [new MessageActionRow().addComponents(...this.buttons), ...this.actionRows];
 
       if (!edit) {
         if (reply instanceof Message)
           this.message = await reply.reply({
             ...this.page,
-            components: this.components
+            components
           });
         else {
           const fetched = await reply.reply({
             ...this.page,
-            components: this.components,
+            components,
             fetchReply: true
           });
           this.message = fetched instanceof Message ? fetched : new Message(reply.client, fetched);
@@ -97,11 +94,11 @@ export class ButtonCheckBool extends EventEmitter {
                 content: null,
                 embeds: [],
                 ...this.page,
-                components: this.components
+                components
               })
             : await reply.reply({
                 ...this.page,
-                components: this.components
+                components
               });
         else return reject(new TypeError("You must provide a message to edit."));
       } else {
@@ -110,11 +107,11 @@ export class ButtonCheckBool extends EventEmitter {
               content: null,
               embeds: [],
               ...this.page,
-              components: this.components
+              components
             })
           : await reply.reply({
               ...this.page,
-              components: this.components,
+              components,
               fetchReply: true
             });
         this.message = fetched instanceof Message ? fetched : new Message(reply.client, fetched);
