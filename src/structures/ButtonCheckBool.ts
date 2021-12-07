@@ -11,7 +11,7 @@ export interface ButtonPaginator {
   on(event: "actionInteraction", listener: (interaction: MessageComponentInteraction) => void): this;
 }
 
-export class ButtonPaginator extends EventEmitter {
+export class ButtonCheckBool extends EventEmitter {
   public page: Page;
   public denied: ButtonCheckBoolDeniedOptions;
   public timeout: number;
