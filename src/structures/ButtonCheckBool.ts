@@ -35,6 +35,10 @@ export class ButtonCheckBool extends EventEmitter {
     this.actionRows = actionRows ?? [];
   }
 
+  public get components() {
+    return [new MessageActionRow().addComponents(...this.buttons), ...this.actionRows];
+  }
+
   public setTimeout(timeout: number) {
     this.timeout = timeout;
     return this;
@@ -68,80 +72,80 @@ export class ButtonCheckBool extends EventEmitter {
   public async run(reply: BaseCommandInteraction | MessageComponentInteraction, edit?: boolean): Promise<boolean | null>;
   public async run(reply: Message, edit?: Message): Promise<boolean | null>;
   public async run(reply: BaseCommandInteraction | MessageComponentInteraction | Message, edit?: boolean | Message) {
-    // eslint-disable-next-line no-async-promise-executor
-    return new Promise<boolean | null>(async (resolve, reject) => {
-      if (!this.buttons) return reject(new Error("There are no pages."));
-      const components = [new MessageActionRow().addComponents(...this.buttons), ...this.actionRows];
+    if (!this.buttons) throw new Error("There are no pages.");
 
-      if (!edit) {
-        if (reply instanceof Message)
-          this.message = await reply.reply({
-            ...this.page,
-            components
-          });
-        else {
-          const fetched = await reply.reply({
-            ...this.page,
-            components,
-            fetchReply: true
-          });
-          this.message = fetched instanceof Message ? fetched : new Message(reply.client, fetched);
-        }
-      } else if (reply instanceof Message) {
-        if (edit instanceof Message)
-          this.message = edit
-            ? await edit.edit({
-                content: null,
-                embeds: [],
-                ...this.page,
-                components
-              })
-            : await reply.reply({
-                ...this.page,
-                components
-              });
-        else return reject(new TypeError("You must provide a message to edit."));
-      } else {
-        const fetched = edit
-          ? await reply.editReply({
+    if (!edit) {
+      if (reply instanceof Message)
+        this.message = await reply.reply({
+          ...this.page,
+          components: this.components
+        });
+      else {
+        const fetched = await reply.reply({
+          ...this.page,
+          components: this.components,
+          fetchReply: true
+        });
+        this.message = fetched instanceof Message ? fetched : new Message(reply.client, fetched);
+      }
+    } else if (reply instanceof Message) {
+      if (edit instanceof Message)
+        this.message = edit
+          ? await edit.edit({
               content: null,
               embeds: [],
               ...this.page,
-              components
+              components: this.components
             })
           : await reply.reply({
               ...this.page,
-              components,
-              fetchReply: true
+              components: this.components
             });
-        this.message = fetched instanceof Message ? fetched : new Message(reply.client, fetched);
-      }
+      else throw new TypeError("You must provide a message to edit.");
+    } else {
+      const fetched = edit
+        ? await reply.editReply({
+            content: null,
+            embeds: [],
+            ...this.page,
+            components: this.components
+          })
+        : await reply.reply({
+            ...this.page,
+            components: this.components,
+            fetchReply: true
+          });
+      this.message = fetched instanceof Message ? fetched : new Message(reply.client, fetched);
+    }
 
-      this.buttonCollector = this.message?.createMessageComponentCollector({ time: this.timeout });
+    this.buttonCollector = this.message?.createMessageComponentCollector({ time: this.timeout });
 
-      this.buttonCollector?.on("collect", async (it) => {
-        const user = reply instanceof Message ? reply.author : reply.member?.user;
-        if (it.user.id === user?.id) {
-          await it.deferUpdate();
+    this.buttonCollector?.on("collect", async (it) => {
+      const user = reply instanceof Message ? reply.author : reply.member?.user;
+      if (it.user.id === user?.id) {
+        await it.deferUpdate();
 
-          switch (it.customId) {
-            case this.buttons.TRUE.customId:
-              return this.buttonCollector?.stop("true");
+        switch (it.customId) {
+          case this.buttons.TRUE.customId:
+            return this.buttonCollector?.stop("true");
 
-            case this.buttons.FALSE.customId:
-              return this.buttonCollector?.stop("false");
+          case this.buttons.FALSE.customId:
+            return this.buttonCollector?.stop("false");
 
-            default:
-              if (this.actionRows.find((row) => row.components.find((component) => component.customId === it.customId)))
-                this.emit("actionInteraction", it);
-              return;
-          }
-        } else {
-          await it.deferReply({ ephemeral: this.denied.ephemeral });
-          await it.editReply(this.denied.content);
+          default:
+            if (this.actionRows.find((row) => row.components.find((component) => component.customId === it.customId)))
+              this.emit("actionInteraction", it);
+            return;
         }
-      });
+      } else {
+        await it.deferReply({ ephemeral: this.denied.ephemeral });
+        await it.editReply(this.denied.content);
+      }
+    });
 
+    this.emit("start", this.message);
+
+    return new Promise((resolve) => {
       this.buttonCollector?.on("end", (_, reason) => {
         this.message?.edit({
           components: [
@@ -157,10 +161,8 @@ export class ButtonCheckBool extends EventEmitter {
         else if (reason === "false") result = false;
 
         this.emit("end", this.message, result);
-        resolve(result);
+        return resolve(result);
       });
-
-      this.emit("start", this.message);
     });
   }
 
