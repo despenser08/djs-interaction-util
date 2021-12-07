@@ -1,6 +1,6 @@
 {
   "name": "djs-interaction-util",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Discord Interaction Utils for discord.js",
   "main": "dist/index.js",
   "scripts": {
