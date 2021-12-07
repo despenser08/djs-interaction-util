@@ -36,10 +36,12 @@ export class ButtonPaginator extends EventEmitter {
     super();
 
     this.pages = pages ?? [];
-    this.denied = denied ?? {
-      content: { content: "Only the requested person can control it." },
-      ephemeral: true
-    };
+    this.denied = denied
+      ? { ...denied, ephemeral: denied.ephemeral ?? true }
+      : {
+          content: { content: "Only the requested person can control it." },
+          ephemeral: true
+        };
     this.timeout = timeout ?? 12e4;
     this.index = index ?? 0;
     this.buttons = buttons ?? PaginatorDefaultButton;
@@ -114,7 +116,7 @@ export class ButtonPaginator extends EventEmitter {
   }
 
   public setDenied(denied: ButtonPaginatorDeniedOptions) {
-    this.denied = denied;
+    this.denied = { ...denied, ephemeral: denied.ephemeral ?? true };
     return this;
   }
 
@@ -183,9 +185,7 @@ export class ButtonPaginator extends EventEmitter {
       this.message = fetched instanceof Message ? fetched : new Message(reply.client, fetched);
     }
 
-    this.buttonCollector = this.message?.createMessageComponentCollector({
-      time: this.timeout
-    });
+    this.buttonCollector = this.message?.createMessageComponentCollector({ time: this.timeout });
 
     this.buttonCollector?.on("collect", async (it) => {
       const user = reply instanceof Message ? reply.author : reply.member?.user;

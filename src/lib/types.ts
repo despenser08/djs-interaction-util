@@ -39,3 +39,24 @@ export interface ButtonPaginatorOptions {
   actionRows?: MessageActionRow[];
   showPageIndex?: boolean;
 }
+
+export enum ButtonCheckBoolTypes {
+  TRUE = "TRUE",
+  FALSE = "FALSE"
+}
+export type ButtonCheckBoolTypesResolvable = keyof typeof ButtonCheckBoolTypes | ButtonCheckBoolTypes;
+
+export type ButtonCheckBoolButton = Record<ButtonCheckBoolTypes, MessageButton>;
+
+export interface ButtonCheckBoolDeniedOptions {
+  content: Page;
+  ephemeral?: boolean;
+}
+
+export interface ButtonCheckBoolOptions {
+  page: Page;
+  denied?: ButtonCheckBoolDeniedOptions;
+  timeout?: number;
+  buttons?: ButtonCheckBoolButton;
+  actionRows?: MessageActionRow[];
+}
