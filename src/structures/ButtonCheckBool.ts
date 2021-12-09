@@ -145,7 +145,7 @@ export class ButtonCheckBool extends EventEmitter {
 
     this.emit("start", this.message);
 
-    return new Promise((resolve) => {
+    return await new Promise<boolean | null>((resolve) => {
       this.buttonCollector?.on("end", (_, reason) => {
         this.message?.edit({
           components: [
