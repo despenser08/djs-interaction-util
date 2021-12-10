@@ -36,7 +36,7 @@ export class ButtonCheckBool extends EventEmitter {
   }
 
   public get components() {
-    return [new MessageActionRow().addComponents(...this.buttons), ...this.actionRows];
+    return [new MessageActionRow().addComponents(this.buttons.TRUE, this.buttons.FALSE), ...this.actionRows];
   }
 
   public setTimeout(timeout: number) {
@@ -145,7 +145,7 @@ export class ButtonCheckBool extends EventEmitter {
 
     this.emit("start", this.message);
 
-    return await new Promise<boolean | null>((resolve) => {
+    return new Promise<boolean | null>((resolve) => {
       this.buttonCollector?.on("end", (_, reason) => {
         this.message?.edit({
           components: [
