@@ -210,7 +210,7 @@ export class ButtonPaginator extends EventEmitter {
             return;
         }
 
-        if (this.message?.attachments.size ?? 0 > 0) await this.message?.removeAttachments();
+        if ((this.message?.attachments.size ?? 0) > 0) await this.message?.removeAttachments();
 
         await it.editReply({
           content: null,
