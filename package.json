@@ -26,12 +26,12 @@
   },
   "homepage": "https://github.com/despenser08/djs-interaction-util#readme",
   "peerDependencies": {
-    "discord.js": "^13"
+    "discord.js": "^14.9.0"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.30.0",
     "@typescript-eslint/parser": "^5.30.0",
-    "discord.js": "^13",
+    "discord.js": "^14.9.0",
     "eslint": "^8.18.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
